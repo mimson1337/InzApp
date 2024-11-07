@@ -1,0 +1,169 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-29 12:44+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%"
+"100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%"
+"10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: .\myapp\templates\base.html:8
+msgid "Django App"
+msgstr "Aplikacja Django"
+
+#: .\myapp\templates\base.html:41
+msgid "My Django App"
+msgstr "Moja Apka Django"
+
+#: .\myapp\templates\base.html:56
+msgid "Home"
+msgstr "Strona główna"
+
+#: .\myapp\templates\base.html:59 .\myapp\templates\search.html:25
+msgid "Search"
+msgstr "Wyszukaj"
+
+#: .\myapp\templates\home.html:7
+msgid "The Depression Speech Analysis App"
+msgstr "Aplikacja do analizy mowy w depresji"
+
+#: .\myapp\templates\home.html:9
+msgid ""
+"The goal of developing an application for searching speech recordings of "
+"people with depression based on specified keywords is to support research on "
+"depression by analyzing linguistic patterns in speech. Automating this "
+"process allows for quick data retrieval, making it easier for researchers "
+"and therapists to access relevant materials, which can help in understanding "
+"depression mechanisms and monitoring patient conditions. "
+msgstr ""
+"Celem opracowania aplikacji do wyszukiwania nagrań mowy osób z depresją na "
+"podstawie określonych słów kluczowych jest wsparcie badań nad depresją "
+"poprzez analizę wzorców językowych w mowie. Automatyzacja tego procesu "
+"umożliwia szybkie pozyskiwanie danych, co ułatwia badaczom i terapeutom "
+"dostęp do odpowiednich materiałów, mogących pomóc w zrozumieniu mechanizmów "
+"depresji oraz monitorowaniu stanu pacjentów."
+
+#: .\myapp\templates\search.html:7
+msgid "Search Recordings"
+msgstr "Wyszukiwanie nagrań"
+
+#: .\myapp\templates\search.html:9
+msgid ""
+"Enter the URL of the website where recordings are hosted, or upload local "
+"MP3/WAV files to transcribe them."
+msgstr ""
+"Wprowadź adres URL strony, na której znajdują się nagrania, lub przesyłaj "
+"lokalne pliki MP3/WAV, aby je przeszukać."
+
+#: .\myapp\templates\search.html:14
+msgid "Choose input method:"
+msgstr "Wybierz metodę wejścia:"
+
+#: .\myapp\templates\search.html:16 .\myapp\templates\search.html:23
+msgid "Enter URL"
+msgstr "Wprowadź adres URL"
+
+#: .\myapp\templates\search.html:17
+msgid "Upload local MP3/WAV files"
+msgstr "Prześlij lokalne pliki MP3/WAV"
+
+#: .\myapp\templates\search.html:23
+msgid "URL"
+msgstr "Adres URL"
+
+#: .\myapp\templates\search.html:31
+msgid "Enter Keywords to Search:"
+msgstr "Wprowadź słowa kluczowe do wyszukiwania:"
+
+#: .\myapp\templates\search.html:32
+msgid "Enter keywords separated by commas"
+msgstr "Wprowadź słowa kluczowe oddzielone przecinkami"
+
+#: .\myapp\templates\search.html:36
+msgid "Or select from predefined keywords:"
+msgstr "Lub wybierz z predefiniowanych słów kluczowych:"
+
+#: .\myapp\templates\search.html:38 .\myapp\templates\search.html:44
+msgid "Depressed"
+msgstr "Przygnębiony"
+
+#: .\myapp\templates\search.html:39 .\myapp\templates\search.html:45
+msgid "Depression"
+msgstr "Depresja"
+
+#: .\myapp\templates\search.html:40 .\myapp\templates\search.html:46
+msgid "Anxiety"
+msgstr "Lęk"
+
+#: .\myapp\templates\search.html:41 .\myapp\templates\search.html:47
+msgid "Always Tired"
+msgstr "Zawsze zmęczony"
+
+#: .\myapp\templates\search.html:42 .\myapp\templates\search.html:48
+msgid "Suicide"
+msgstr "Samobójstwo"
+
+#: .\myapp\templates\search.html:56
+msgid "Upload MP3/WAV files:"
+msgstr "Prześlij pliki MP3/WAV:"
+
+#: .\myapp\templates\search.html:64
+msgid "Transcribe Selected"
+msgstr "Przeszukaj zaznaczone"
+
+#: .\myapp\templates\search.html:143
+msgid "No MP3 files found."
+msgstr "Nie znaleziono plików MP3."
+
+#: .\myapp\templates\search.html:149
+msgid "An error occurred. Please try again."
+msgstr "Wystąpił błąd. Proszę spróbować ponownie."
+
+#: .\myapp\templates\search.html:206
+msgid "Please select at least one MP3 to transcribe."
+msgstr "Proszę wybrać przynajmniej jeden plik MP3 do transkrypcji."
+
+#: .\myapp\templates\search.html:214
+msgid "Transcription:"
+msgstr "Transkrypcja:"
+
+#: .\myapp\templates\search.html:216
+msgid "Keywords Found:"
+msgstr "Znalezione słowa kluczowe:"
+
+#, fuzzy
+#~| msgid "Depressed"
+#~ msgid "depressed"
+#~ msgstr "Przygnębiony"
+
+#, fuzzy
+#~| msgid "Depression"
+#~ msgid "depression"
+#~ msgstr "Depresja"
+
+#, fuzzy
+#~| msgid "Anxiety"
+#~ msgid "anxiety"
+#~ msgstr "Lęk"
+
+#, fuzzy
+#~| msgid "Always Tired"
+#~ msgid "always tired"
+#~ msgstr "Zawsze zmęczony"
+
+#, fuzzy
+#~| msgid "Suicide"
+#~ msgid "suicide"
+#~ msgstr "Samobójstwo"

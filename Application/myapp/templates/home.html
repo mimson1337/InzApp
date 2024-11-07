@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %} Home Page {% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-dark text-light p-4">
+  <h1 class="display-4">{%trans "The Depression Speech Analysis App" %}</h1>
+  <p class="lead">
+    {%trans "The goal of developing an application for searching speech recordings of people with depression based on specified keywords is to support research on depression by analyzing linguistic patterns in speech. Automating this process allows for quick data retrieval, making it easier for researchers and therapists to access relevant materials, which can help in understanding depression mechanisms and monitoring patient conditions. "%}
+  </p>
+</div>
+{% endblock %}

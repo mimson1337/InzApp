@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+{% load i18n %}
+
+{% block content %}
+<div class="jumbotron bg-dark text-light p-4">
+    <h1 class="display-4">{% trans "Search Recordings" %}</h1>
+    <p class="lead">
+        {% trans "Enter the URL of the website where recordings are hosted, or upload local MP3/WAV files to transcribe them." %}
+    </p>
+
+    <!-- Input method selection: URL or local files -->
+    <div class="form-group">
+        <label for="methodSelect">{% trans "Choose input method:" %}</label>
+        <select id="methodSelect" class="form-control" onchange="toggleInputMethod()">
+            <option value="url">{% trans "Enter URL" %}</option>
+            <option value="file">{% trans "Upload local MP3/WAV files" %}</option>
+        </select>
+    </div>
+
+    <!-- URL input section -->
+    <div id="urlInputSection" class="input-group mb-3">
+        <input type="text" id="urlInput" class="form-control" value="https://depressedanon.com/depressed-anonymous-conference-recordings/" placeholder="{% trans 'URL' %}" aria-label="{% trans 'Enter URL' %}">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="button" id="searchButton" onclick="searchRecords()">{% trans "Search" %}</button>
+        </div>
+    </div>
+
+    <!-- Keyword entry section (initially hidden) -->
+    <div class="form-group" id="keywordSection" style="display: none;">
+        <label for="keywordInput">{% trans "Enter Keywords to Search:" %}</label>
+        <input type="text" id="keywordInput" class="form-control" placeholder="{% trans 'Enter keywords separated by commas' %}">
+    </div>
+
+    <div id="predefinedKeywords" style="display: none;">
+        <p>{% trans "Or select from predefined keywords:" %}</p>
+        {% if request.LANGUAGE_CODE == 'en' %}
+            <button class="btn btn-outline-secondary" onclick="addKeyword('depressed')">{% trans "Depressed" %}</button>
+            <button class="btn btn-outline-secondary" onclick="addKeyword('depression')">{% trans "Depression" %}</button>
+            <button class="btn btn-outline-secondary" onclick="addKeyword('anxiety')">{% trans "Anxiety" %}</button>
+            <button class="btn btn-outline-secondary" onclick="addKeyword('always tired')">{% trans "Always Tired" %}</button>
+            <button class="btn btn-outline-secondary" onclick="addKeyword('suicide')">{% trans "Suicide" %}</button>
+        {% elif request.LANGUAGE_CODE == 'pl' %}
+            <button class="btn btn-outline-secondary" onclick="addKeyword('przygnębiony')">{% trans "Depressed" %}</button>
+            <button class="btn btn-outline-secondary" onclick="addKeyword('depresja')">{% trans "Depression" %}</button>
+            <button class="btn btn-outline-secondary" onclick="addKeyword('lęk')">{% trans "Anxiety" %}</button>
+            <button class="btn btn-outline-secondary" onclick="addKeyword('zawsze zmęczony')">{% trans "Always Tired" %}</button>
+            <button class="btn btn-outline-secondary" onclick="addKeyword('samobójstwo')">{% trans "Suicide" %}</button>
+        {% endif %}
+    </div>
+
+    <!-- Local file upload section -->
+    <div id="fileInputSection" class="mb-3" style="display: none;">
+        <label for="fileInput">{% trans "Upload MP3/WAV files:" %}</label>
+        <input type="file" id="fileInput" class="form-control" multiple>
+    </div>
+
+    <!-- Search results -->
+    <div id="results" class="mt-4"></div>
+
+    <!-- Transcribe button -->
+    <button class="btn btn-success mt-3" id="transcribeButton" onclick="transcribeSelected()" style="display:none;">{% trans "Transcribe Selected" %}</button>
+</div>
+
+<script>
+    // Toggling input methods, without displaying keywords section automatically
+function toggleInputMethod() {
+    const method = document.getElementById('methodSelect').value;
+    document.getElementById('urlInputSection').style.display = (method === 'url') ? 'flex' : 'none';
+    document.getElementById('fileInputSection').style.display = (method === 'file') ? 'block' : 'none';
+
+    // Hide keyword entry and predefined keywords initially
+    document.getElementById('keywordSection').style.display = 'none';
+    document.getElementById('predefinedKeywords').style.display = 'none';
+    document.getElementById('transcribeButton').style.display = (method === 'file') ? 'block' : 'none';
+
+    document.getElementById('results').innerHTML = ''; // Reset results
+}
+
+// Display keywords section after files are uploaded or URL is searched
+function displayKeywordsSection() {
+    document.getElementById('keywordSection').style.display = 'block';
+    document.getElementById('predefinedKeywords').style.display = 'block';
+}
+
+// Dodawanie słów kluczowych
+    function addKeyword(keyword) {
+        const keywordInput = document.getElementById('keywordInput');
+        const existingKeywords = keywordInput.value ? keywordInput.value.split(',').map(k => k.trim()) : [];
+        if (!existingKeywords.includes(keyword)) {
+            existingKeywords.push(keyword);
+        }
+        keywordInput.value = existingKeywords.join(', ');
+    }
+
+// Show keywords section after successful search (for URL)
+function searchRecords() {
+    const urlToSearch = document.getElementById('urlInput').value;
+
+    fetch("{% url 'search' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({ url: urlToSearch })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';
+
+        if (data.length > 0) {
+            data.forEach((mp3, index) => {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = 'mp3_' + index;
+                checkbox.value = mp3;
+                checkbox.className = 'mp3-checkbox';
+
+                const label = document.createElement('label');
+                label.htmlFor = 'mp3_' + index;
+                label.textContent = mp3;
+                label.className = 'd-block mb-2';
+
+                resultsDiv.appendChild(checkbox);
+                resultsDiv.appendChild(label);
+            });
+
+            document.getElementById('transcribeButton').style.display = 'block';
+            displayKeywordsSection();  // Display keyword entry after search
+        } else {
+            resultsDiv.innerHTML = '<p class="text-warning">{% trans "No MP3 files found." %}</p>';
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '<p class="text-danger">{% trans "An error occurred. Please try again." %}</p>';
+    });
+}
+
+// Show keywords section after files are uploaded (for local files)
+document.getElementById('fileInput').addEventListener('change', function() {
+    if (this.files.length > 0) {
+        displayKeywordsSection();
+    }
+});
+
+
+    // Transcribe selected recordings (URLs or local files)
+    function transcribeSelected() {
+        const selectedMp3s = [];
+        const fileInput = document.getElementById('fileInput');
+        const keywords = document.getElementById('keywordInput').value.split(',').map(k => k.trim());
+
+        // Handle local file upload
+        if (fileInput.files.length > 0) {
+            const formData = new FormData();
+            for (let i = 0; i < fileInput.files.length; i++) {
+                formData.append('mp3_files', fileInput.files[i]);
+            }
+            formData.append('keywords', keywords.join(','));
+
+            fetch("{% url 'transcribe' %}", {
+                method: "POST",
+                headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayTranscriptionResults(data);
+            })
+            .catch(error => console.error("Error:", error));
+        } else {
+            document.querySelectorAll('.mp3-checkbox:checked').forEach(checkbox => {
+                selectedMp3s.push(checkbox.value);
+            });
+
+            if (selectedMp3s.length > 0) {
+                fetch("{% url 'transcribe' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({ mp3s: selectedMp3s, keywords: keywords })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    displayTranscriptionResults(data);
+                })
+                .catch(error => console.error("Error:", error));
+            } else {
+                alert("{% trans 'Please select at least one MP3 to transcribe.' %}");
+            }
+        }
+    }
+
+    // Display transcription results
+    function displayTranscriptionResults(data) {
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = `
+            <h4>{% trans "Transcription:" %}</h4>
+            <p>${data.transcription}</p>
+            <h4>{% trans "Keywords Found:" %}</h4>
+            <p>${data.found_keywords.join(', ')}</p>
+            <p>${data.message}</p>
+        `;
+    }
+</script>
+
+<style>
+    #urlInput {
+        width: calc(100% - 110px);  /* Ustawia szerokość pola URL z uwzględnieniem przycisku */
+        min-width: 300px;
+    }
+
+    .input-group {
+        display: flex;  /* Sprawia, że input i przycisk są obok siebie */
+    }
+
+    .input-group-append {
+        margin-left: 10px;  /* Odstęp między inputem a przyciskiem */
+    }
+</style>
+{% endblock %}
