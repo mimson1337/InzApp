@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Search{% endblock %}
 {% load i18n %}
-
 {% block content %}
 <div class="jumbotron bg-dark text-light p-4">
     <h1 class="display-4">{% trans "Search Recordings" %}</h1>
@@ -52,7 +51,7 @@
     <!-- Local file upload section -->
     <div id="fileInputSection" class="mb-3" style="display: none;">
         <label for="fileInput">{% trans "Upload MP3/WAV files:" %}</label>
-        <input type="file" id="fileInput" class="form-control" multiple>
+        <input type="file" id="fileInput" class="form-control" multiple accept=".mp3, .wav">
     </div>
 
     <!-- Search results -->
@@ -198,16 +197,17 @@ document.getElementById('fileInput').addEventListener('change', function() {
     }
 
     // Display transcription results
-    function displayTranscriptionResults(data) {
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = `
-            <h4>{% trans "Transcription:" %}</h4>
-            <p>${data.transcription}</p>
-            <h4>{% trans "Keywords Found:" %}</h4>
-            <p>${data.found_keywords.join(', ')}</p>
-            <p>${data.message}</p>
-        `;
-    }
+function displayTranscriptionResults(data) {
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = `
+        <h4>{% trans "Transcription:" %}</h4>
+        <p>${data.transcription}</p>
+        <h4>{% trans "Keywords Found:" %}</h4>
+        <p>${data.found_keywords.join(', ')}</p>
+        <p>${data.message}</p>
+    `;
+}
+
 </script>
 
 <style>
@@ -224,4 +224,5 @@ document.getElementById('fileInput').addEventListener('change', function() {
         margin-left: 10px;  /* Odstęp między inputem a przyciskiem */
     }
 </style>
+
 {% endblock %}
