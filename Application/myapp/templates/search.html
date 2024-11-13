@@ -28,7 +28,7 @@
     <!-- Keyword entry section (initially hidden) -->
     <div class="form-group" id="keywordSection" style="display: none;">
         <label for="keywordInput">{% trans "Enter Keywords to Search:" %}</label>
-        <input type="text" id="keywordInput" class="form-control" placeholder="{% trans 'Enter keywords separated by commas' %}">
+        <input type="text" id="keywordInput" class="form-control" placeholder="{% trans 'Enter keywords separated by *and*' %}">
     </div>
 
     <div id="predefinedKeywords" style="display: none;">
@@ -84,13 +84,14 @@ function displayKeywordsSection() {
 
 // Dodawanie słów kluczowych
     function addKeyword(keyword) {
-        const keywordInput = document.getElementById('keywordInput');
-        const existingKeywords = keywordInput.value ? keywordInput.value.split(',').map(k => k.trim()) : [];
-        if (!existingKeywords.includes(keyword)) {
-            existingKeywords.push(keyword);
-        }
-        keywordInput.value = existingKeywords.join(', ');
+    const keywordInput = document.getElementById('keywordInput');
+    const existingKeywords = keywordInput.value ? keywordInput.value.split(' and ').map(k => k.trim()) : [];
+    if (!existingKeywords.includes(keyword)) {
+        existingKeywords.push(keyword);
     }
+    keywordInput.value = existingKeywords.join(' and ');
+}
+
 
 // Show keywords section after successful search (for URL)
 function searchRecords() {
@@ -148,23 +149,48 @@ document.getElementById('fileInput').addEventListener('change', function() {
 
 
     // Transcribe selected recordings (URLs or local files)
-    function transcribeSelected() {
-        const selectedMp3s = [];
-        const fileInput = document.getElementById('fileInput');
-        const keywords = document.getElementById('keywordInput').value.split(',').map(k => k.trim());
+    // Update the transcribeSelected function to format keywords with " and " instead of commas
+function transcribeSelected() {
+    const selectedMp3s = [];
+    const fileInput = document.getElementById('fileInput');
 
-        // Handle local file upload
-        if (fileInput.files.length > 0) {
-            const formData = new FormData();
-            for (let i = 0; i < fileInput.files.length; i++) {
-                formData.append('mp3_files', fileInput.files[i]);
-            }
-            formData.append('keywords', keywords.join(','));
+    // Split and rejoin keywords with ' and '
+    let keywords = document.getElementById('keywordInput').value
+        .split('and')
+        .map(k => k.trim())
+        .join(' and ');
 
+
+    if (fileInput.files.length > 0) {
+        const formData = new FormData();
+        for (let i = 0; i < fileInput.files.length; i++) {
+            formData.append('mp3_files', fileInput.files[i]);
+        }
+        formData.append('keywords', keywords);
+
+        fetch("{% url 'transcribe' %}", {
+            method: "POST",
+            headers: { "X-CSRFToken": "{{ csrf_token }}" },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            displayTranscriptionResults(data);
+        })
+        .catch(error => console.error("Error:", error));
+    } else {
+        document.querySelectorAll('.mp3-checkbox:checked').forEach(checkbox => {
+            selectedMp3s.push(checkbox.value);
+        });
+
+        if (selectedMp3s.length > 0) {
             fetch("{% url 'transcribe' %}", {
                 method: "POST",
-                headers: { "X-CSRFToken": "{{ csrf_token }}" },
-                body: formData
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ mp3s: selectedMp3s, keywords: keywords })
             })
             .then(response => response.json())
             .then(data => {
@@ -172,41 +198,29 @@ document.getElementById('fileInput').addEventListener('change', function() {
             })
             .catch(error => console.error("Error:", error));
         } else {
-            document.querySelectorAll('.mp3-checkbox:checked').forEach(checkbox => {
-                selectedMp3s.push(checkbox.value);
-            });
-
-            if (selectedMp3s.length > 0) {
-                fetch("{% url 'transcribe' %}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": "{{ csrf_token }}"
-                    },
-                    body: JSON.stringify({ mp3s: selectedMp3s, keywords: keywords })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    displayTranscriptionResults(data);
-                })
-                .catch(error => console.error("Error:", error));
-            } else {
-                alert("{% trans 'Please select at least one MP3 to transcribe.' %}");
-            }
+            alert("{% trans 'Please select at least one MP3 to transcribe.' %}");
         }
     }
+}
 
-    // Display transcription results
+
+
 function displayTranscriptionResults(data) {
     const resultsDiv = document.getElementById('results');
+    const foundKeywords = data.found_keywords && data.found_keywords.length > 0
+        ? data.found_keywords.join(', ')
+        : "{% trans 'No keywords found' %}";
+
     resultsDiv.innerHTML = `
         <h4>{% trans "Transcription:" %}</h4>
         <p>${data.transcription}</p>
         <h4>{% trans "Keywords Found:" %}</h4>
-        <p>${data.found_keywords.join(', ')}</p>
+        <p>${foundKeywords}</p>
         <p>${data.message}</p>
     `;
 }
+
+
 
 </script>
 

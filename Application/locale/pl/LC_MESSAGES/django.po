@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-29 12:44+0100\n"
+"POT-Creation-Date: 2024-11-13 11:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr "Moja Apka Django"
 msgid "Home"
 msgstr "Strona główna"
 
-#: .\myapp\templates\base.html:59 .\myapp\templates\search.html:25
+#: .\myapp\templates\base.html:59 .\myapp\templates\search.html:24
 msgid "Search"
 msgstr "Wyszukaj"
 
@@ -55,11 +55,11 @@ msgstr ""
 "dostęp do odpowiednich materiałów, mogących pomóc w zrozumieniu mechanizmów "
 "depresji oraz monitorowaniu stanu pacjentów."
 
-#: .\myapp\templates\search.html:7
+#: .\myapp\templates\search.html:6
 msgid "Search Recordings"
 msgstr "Wyszukiwanie nagrań"
 
-#: .\myapp\templates\search.html:9
+#: .\myapp\templates\search.html:8
 msgid ""
 "Enter the URL of the website where recordings are hosted, or upload local "
 "MP3/WAV files to transcribe them."
@@ -67,79 +67,85 @@ msgstr ""
 "Wprowadź adres URL strony, na której znajdują się nagrania, lub przesyłaj "
 "lokalne pliki MP3/WAV, aby je przeszukać."
 
-#: .\myapp\templates\search.html:14
+#: .\myapp\templates\search.html:13
 msgid "Choose input method:"
 msgstr "Wybierz metodę wejścia:"
 
-#: .\myapp\templates\search.html:16 .\myapp\templates\search.html:23
+#: .\myapp\templates\search.html:15 .\myapp\templates\search.html:22
 msgid "Enter URL"
 msgstr "Wprowadź adres URL"
 
-#: .\myapp\templates\search.html:17
+#: .\myapp\templates\search.html:16
 msgid "Upload local MP3/WAV files"
 msgstr "Prześlij lokalne pliki MP3/WAV"
 
-#: .\myapp\templates\search.html:23
+#: .\myapp\templates\search.html:22
 msgid "URL"
 msgstr "Adres URL"
 
-#: .\myapp\templates\search.html:31
+#: .\myapp\templates\search.html:30
 msgid "Enter Keywords to Search:"
 msgstr "Wprowadź słowa kluczowe do wyszukiwania:"
 
-#: .\myapp\templates\search.html:32
-msgid "Enter keywords separated by commas"
-msgstr "Wprowadź słowa kluczowe oddzielone przecinkami"
+#: .\myapp\templates\search.html:31
+msgid "Enter keywords separated by *and*"
+msgstr "Wprowadź słowa kluczowe oddzielone przez *and*"
 
-#: .\myapp\templates\search.html:36
+#: .\myapp\templates\search.html:35
 msgid "Or select from predefined keywords:"
 msgstr "Lub wybierz z predefiniowanych słów kluczowych:"
 
-#: .\myapp\templates\search.html:38 .\myapp\templates\search.html:44
+#: .\myapp\templates\search.html:37 .\myapp\templates\search.html:43
 msgid "Depressed"
 msgstr "Przygnębiony"
 
-#: .\myapp\templates\search.html:39 .\myapp\templates\search.html:45
+#: .\myapp\templates\search.html:38 .\myapp\templates\search.html:44
 msgid "Depression"
 msgstr "Depresja"
 
-#: .\myapp\templates\search.html:40 .\myapp\templates\search.html:46
+#: .\myapp\templates\search.html:39 .\myapp\templates\search.html:45
 msgid "Anxiety"
 msgstr "Lęk"
 
-#: .\myapp\templates\search.html:41 .\myapp\templates\search.html:47
+#: .\myapp\templates\search.html:40 .\myapp\templates\search.html:46
 msgid "Always Tired"
 msgstr "Zawsze zmęczony"
 
-#: .\myapp\templates\search.html:42 .\myapp\templates\search.html:48
+#: .\myapp\templates\search.html:41 .\myapp\templates\search.html:47
 msgid "Suicide"
 msgstr "Samobójstwo"
 
-#: .\myapp\templates\search.html:56
+#: .\myapp\templates\search.html:53
 msgid "Upload MP3/WAV files:"
 msgstr "Prześlij pliki MP3/WAV:"
 
-#: .\myapp\templates\search.html:64
+#: .\myapp\templates\search.html:61
 msgid "Transcribe Selected"
 msgstr "Przeszukaj zaznaczone"
 
-#: .\myapp\templates\search.html:143
+#: .\myapp\templates\search.html:133
 msgid "No MP3 files found."
 msgstr "Nie znaleziono plików MP3."
 
-#: .\myapp\templates\search.html:149
+#: .\myapp\templates\search.html:139
 msgid "An error occurred. Please try again."
 msgstr "Wystąpił błąd. Proszę spróbować ponownie."
 
-#: .\myapp\templates\search.html:206
+#: .\myapp\templates\search.html:201
 msgid "Please select at least one MP3 to transcribe."
 msgstr "Proszę wybrać przynajmniej jeden plik MP3 do transkrypcji."
 
-#: .\myapp\templates\search.html:214
+#: .\myapp\templates\search.html:212
+#, fuzzy
+#| msgid "Keywords Found:"
+msgid "No keywords found"
+msgstr "Znalezione słowa kluczowe:"
+
+#: .\myapp\templates\search.html:215
 msgid "Transcription:"
 msgstr "Transkrypcja:"
 
-#: .\myapp\templates\search.html:216
+#: .\myapp\templates\search.html:217
 msgid "Keywords Found:"
 msgstr "Znalezione słowa kluczowe:"
 
