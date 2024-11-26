@@ -48,11 +48,16 @@
         {% endif %}
     </div>
 
+
     <!-- Local file upload section -->
     <div id="fileInputSection" class="mb-3" style="display: none;">
         <label for="fileInput">{% trans "Upload MP3/WAV files:" %}</label>
         <input type="file" id="fileInput" class="form-control" multiple accept=".mp3, .wav">
+        <div id="fileError" class="text-danger mt-2" style="display: none;">
+            {% trans "Invalid file type. Please upload only MP3 or WAV files." %}
+        </div>
     </div>
+
 
     <!-- Search results -->
     <div id="results" class="mt-4"></div>
@@ -142,8 +147,29 @@ function searchRecords() {
 
 // Show keywords section after files are uploaded (for local files)
 document.getElementById('fileInput').addEventListener('change', function() {
-    if (this.files.length > 0) {
-        displayKeywordsSection();
+    const allowedExtensions = ['mp3', 'wav'];
+    const errorDiv = document.getElementById('fileError');
+    let validFiles = true;
+
+    // Check each uploaded file
+    for (let i = 0; i < this.files.length; i++) {
+        const fileExtension = this.files[i].name.split('.').pop().toLowerCase();
+        if (!allowedExtensions.includes(fileExtension)) {
+            validFiles = false;
+            break;
+        }
+    }
+
+    if (!validFiles) {
+        // Show error message and reset input
+        errorDiv.style.display = 'block';
+        this.value = ''; // Clear the file input
+    } else {
+        // Hide error message and proceed
+        errorDiv.style.display = 'none';
+        if (this.files.length > 0) {
+            displayKeywordsSection();
+        }
     }
 });
 

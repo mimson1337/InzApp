@@ -19,7 +19,15 @@ from django.core.files.storage import FileSystemStorage
 import logging
 import re
 
-model = whisper.load_model("base")
+#20.51 tiny 89.61%
+#29.12 base 91.62%
+#small 1:12:00 92.36%
+#medium 3:09:00 94.26%
+#large 16:57 93.27%
+
+
+# , device="cuda"
+model = whisper.load_model("tiny")
 os.environ["FFMPEG_BINARY"] = r"C:\ffmpeg\ffmpeg.exe"
 
 
@@ -58,27 +66,22 @@ def transcribe(request):
                 return text
 
             def process_transcription(transcription_text, source, duration):
-                """Zwraca znalezione słowa kluczowe i ustawia flagę related_to_depression."""
-                # Sprawdzamy, czy chociaż jedno słowo kluczowe jest w transkrypcji
-                # Używamy lower() tylko do porównania słów kluczowych z transkrypcją, ale nie modyfikujemy samej transkrypcji
-                transcription_text_lower = transcription_text.lower()  # Przechowujemy transkrypcję w wersji małych liter do porównania
+                transcription_text_lower = transcription_text.lower()
 
-
-                keywords_found = [kw for kw in keywords if
-                                  kw.lower() in transcription_text_lower]  # Używamy .lower() tylko dla słów kluczowych
+                keywords_found = [kw for kw in keywords if kw.lower() in transcription_text_lower]
                 related_to_depression = len(keywords_found) > 0
                 found_keywords.extend(keywords_found)
 
                 highlighted_text = highlight_keywords(transcription_text, keywords_found)
-                # Zapisujemy do bazy danych
+
                 AudioFile.objects.create(
                     url=source,
-                    transcription_text=transcription_text,  # Zapisujemy oryginalną transkrypcję (z wielkimi literami)
+                    transcription_text=transcription_text,
                     duration=duration,
                     related_to_depression=related_to_depression,
                     found_keywords=', '.join(set(keywords_found))
                 )
-                return highlighted_text  # Zwracamy oryginalny tekst transkrypcji
+                return highlighted_text
 
             # Przetwarzanie przesłanych plików
             if 'mp3_files' in request.FILES:
@@ -111,7 +114,7 @@ def transcribe(request):
             return JsonResponse({
                 'transcription': '\n'.join(transcription_results),
                 'found_keywords': list(set(found_keywords)),
-                'message': 'Files processed and saved to database.'
+                'message': ''
             }, status=200)
 
         except Exception as e:
@@ -147,6 +150,7 @@ def search(request):
             soup = bs(page_source, 'html.parser')
             results = []
 
+            # Zbieranie linków do plików audio
             for tag in soup.find_all('a'):
                 href = tag.get('href')
                 if href and (href.endswith('.mp3') or href.endswith('.wav')):
@@ -157,7 +161,10 @@ def search(request):
                 if src and (src.endswith('.mp3') or src.endswith('.wav')):
                     results.append(src)
 
-            return JsonResponse(results, safe=False)
+            # Usuwanie duplikatów za pomocą `set`
+            unique_results = list(set(results))
+
+            return JsonResponse(unique_results, safe=False)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
