@@ -87,7 +87,7 @@ function displayKeywordsSection() {
     document.getElementById('predefinedKeywords').style.display = 'block';
 }
 
-// Dodawanie słów kluczowych
+// Adding keywords function
     function addKeyword(keyword) {
     const keywordInput = document.getElementById('keywordInput');
     const existingKeywords = keywordInput.value ? keywordInput.value.split(' and ').map(k => k.trim()) : [];
@@ -175,7 +175,6 @@ document.getElementById('fileInput').addEventListener('change', function() {
 
 
     // Transcribe selected recordings (URLs or local files)
-    // Update the transcribeSelected function to format keywords with " and " instead of commas
 function transcribeSelected() {
     const selectedMp3s = [];
     const fileInput = document.getElementById('fileInput');
@@ -252,16 +251,16 @@ function displayTranscriptionResults(data) {
 
 <style>
     #urlInput {
-        width: calc(100% - 110px);  /* Ustawia szerokość pola URL z uwzględnieniem przycisku */
+        width: calc(100% - 110px);
         min-width: 300px;
     }
 
     .input-group {
-        display: flex;  /* Sprawia, że input i przycisk są obok siebie */
+        display: flex;
     }
 
     .input-group-append {
-        margin-left: 10px;  /* Odstęp między inputem a przyciskiem */
+        margin-left: 10px;
     }
 </style>
 

@@ -59,20 +59,19 @@
             <a class="nav-link" href="/search-records">{% trans "Search" %}</a>
           </li>
         </ul>
-        <!-- Ikony wyboru języka -->
         <div class="language-icons">
           <form action="{% url 'set_language' %}" method="post" style="display: inline;">
             {% csrf_token %}
            <input type="hidden" name="language" value="en">
-          <button type="submit" style="background: none; border: none; padding: 0;">
-            <img src="https://flagicons.lipis.dev/flags/4x3/gb.svg" alt="English" title="English">
+    <button type="submit" style="background: none; border: none; padding: 0; width: 24px; height: 16px;">
+            <img src="https://flagicons.lipis.dev/flags/4x3/gb.svg" alt="English" title="English" style="width: 100%; height: 100%; display: block;">
            </button>
           </form>
           <form action="{% url 'set_language' %}" method="post" style="display: inline;">
             {% csrf_token %}
             <input type="hidden" name="language" value="pl">
-            <button type="submit" style="background: none; border: none; padding: 0;">
-              <img src="https://flagicons.lipis.dev/flags/4x3/pl.svg" alt="Polski" title="Polski">
+    <button type="submit" style="background: none; border: none; padding: 0; width: 24px; height: 16px;">
+              <img src="https://flagicons.lipis.dev/flags/4x3/pl.svg" alt="Polski" title="Polski" style="width: 100%; height: 100%; display: block;">
              </button>
           </form>
 </div>

@@ -19,15 +19,7 @@ from django.core.files.storage import FileSystemStorage
 import logging
 import re
 
-#20.51 tiny 89.61%
-#29.12 base 91.62%
-#small 1:12:00 92.36%
-#medium 3:09:00 94.26%
-#large 16:57 93.27%
-
-
-# , device="cuda"
-model = whisper.load_model("tiny")
+model = whisper.load_model("base")
 os.environ["FFMPEG_BINARY"] = r"C:\ffmpeg\ffmpeg.exe"
 
 
@@ -43,13 +35,33 @@ logger = logging.getLogger(__name__)
 related_to_depression = False
 
 
-@csrf_exempt
+def download_audio(url):
+
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+
+        response = requests.get(url, headers=headers, stream=True)
+
+        if response.status_code == 200:
+            return response.content
+        elif response.status_code == 403:
+            logger.error(f"Access denied for {url} (status 403).")
+            return None
+        else:
+            logger.error(f"Failed to download {url} (status {response.status_code}).")
+            return None
+    except Exception as e:
+        logger.error(f"Error downloading {url}: {str(e)}")
+        return None
+
+
 def transcribe(request):
     if request.method == 'POST':
         transcription_results = []
         found_keywords = []
         try:
-            # Pobierz słowa kluczowe z żądania i przetwórz
             keywords = []
             if 'mp3_files' in request.FILES:
                 keywords = request.POST.get('keywords', '').split(' and ')
@@ -58,7 +70,6 @@ def transcribe(request):
                 keywords = data.get('keywords', '').split(' and ')
 
             keywords = [kw.strip().lower() for kw in keywords if kw.strip()]
-
 
             def highlight_keywords(text, keywords):
                 for kw in set(keywords):
@@ -83,7 +94,6 @@ def transcribe(request):
                 )
                 return highlighted_text
 
-            # Przetwarzanie przesłanych plików
             if 'mp3_files' in request.FILES:
                 for uploaded_file in request.FILES.getlist('mp3_files'):
                     fs = FileSystemStorage()
@@ -96,20 +106,21 @@ def transcribe(request):
                         process_transcription(result['text'], filename, duration)
                     )
             else:
-                # Przetwarzanie plików z URL
                 mp3_links = json.loads(request.body).get('mp3s', [])
                 for mp3_link in mp3_links:
-                    response = requests.get(mp3_link)
-                    if response.status_code == 200:
+                    audio_content = download_audio(mp3_link)
+                    if audio_content:
                         audio_path = f"temp_{mp3_link.split('/')[-1]}"
                         with open(audio_path, 'wb') as f:
-                            f.write(response.content)
+                            f.write(audio_content)
                         metadata = audio_metadata.load(audio_path)
                         duration = metadata.streaminfo['duration']
                         result = model.transcribe(audio_path)
                         transcription_results.append(
                             process_transcription(result['text'], mp3_link, duration)
                         )
+                    else:
+                        transcription_results.append(f"Failed to download {mp3_link}")
 
             return JsonResponse({
                 'transcription': '\n'.join(transcription_results),
@@ -121,7 +132,6 @@ def transcribe(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
-
 
 
 @csrf_exempt
@@ -150,7 +160,6 @@ def search(request):
             soup = bs(page_source, 'html.parser')
             results = []
 
-            # Zbieranie linków do plików audio
             for tag in soup.find_all('a'):
                 href = tag.get('href')
                 if href and (href.endswith('.mp3') or href.endswith('.wav')):
@@ -161,7 +170,6 @@ def search(request):
                 if src and (src.endswith('.mp3') or src.endswith('.wav')):
                     results.append(src)
 
-            # Usuwanie duplikatów za pomocą `set`
             unique_results = list(set(results))
 
             return JsonResponse(unique_results, safe=False)

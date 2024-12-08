@@ -6,5 +6,4 @@ from django.contrib import admin
 from django.contrib import admin
 from .models import AudioFile
 
-# Register MP3File model to make it visible in the admin
 admin.site.register(AudioFile)

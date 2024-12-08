@@ -18,14 +18,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 import os
 from dotenv import load_dotenv
 
-# Załaduj zmienne środowiskowe z pliku .env
 load_dotenv()
 
-# Pobierz wartość REPLICATE_API_TOKEN
 REPLICATE_API_TOKEN = os.getenv("REPLICATE_API_TOKEN")
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-7e$wm9z6qzdnec=g+lf7skly3zc29!43(lhv^v6@v*#c5v%w!('

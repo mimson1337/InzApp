@@ -3,13 +3,13 @@ from django.urls import reverse
 from .models import AudioFile
 import json
 
+
 class TranscriptionTestCase(TestCase):
     def setUp(self):
         self.client = Client()
 
     def test_transcribe_with_keywords(self):
-        """Test transkrypcji z podanymi słowami kluczowymi"""
-        audio_file_path = 'siema.mp3'
+        audio_file_path = 'audiofile.mp3'
         with open(audio_file_path, 'rb') as audio_file:
             response = self.client.post(
                 reverse('transcribe'),
@@ -35,9 +35,9 @@ class TranscriptionTestCase(TestCase):
         self.assertEqual(audio_file.transcription_text, "This is a test transcription.")
         self.assertTrue(audio_file.related_to_depression)
 
+
 class SearchTestCase(TestCase):
     def test_search_finds_audio_links(self):
-        """Test wyszukiwania linków do plików audio"""
         response = self.client.post(
             reverse('search'),
             data=json.dumps({'url': 'https://freesound.org/people/bjornbradley/sounds/723502/'}),
